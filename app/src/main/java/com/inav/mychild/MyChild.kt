@@ -1,5 +1,10 @@
 package com.inav.mychild
 
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PointF
+import android.view.View
 import java.time.LocalDate
 import java.time.Period
 
@@ -25,3 +30,5 @@ class MyChild(val name : String, private val birthday: LocalDate, val sex: Sex) 
         return "лет"
     }
 }
+
+
