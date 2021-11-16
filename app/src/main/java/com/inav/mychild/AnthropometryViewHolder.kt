@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.text.DecimalFormat
 
 class AnthropometryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(anthropometry : Anthropometry){
@@ -11,8 +12,10 @@ class AnthropometryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         val heightTextView = itemView.findViewById<TextView>(R.id.height_anthropometry_card_TextView)
         val weightTextView = itemView.findViewById<TextView>(R.id.weight_anthropometry_card_TextView)
 
+        val decimalFormat = DecimalFormat("###.##")
+
         dateTextView.text = "Дата: ${anthropometry.date}"
-        heightTextView.text = "Рост: ${anthropometry.height}"
-        weightTextView.text = "Вес: ${anthropometry.weight}"
+        heightTextView.text = "Рост: ${decimalFormat.format(anthropometry.height)} кг."
+        weightTextView.text = "Вес: ${decimalFormat.format(anthropometry.weight)} см."
     }
 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ChildrenRecyclerViewAdapter(private val children : List<MyChild>) : RecyclerView.Adapter<ChildrenViewHolder>() {
 
+    var isInit = false
     private var tracker: SelectionTracker<Long>? = null
     init {
         setHasStableIds(true)
@@ -24,9 +25,14 @@ class ChildrenRecyclerViewAdapter(private val children : List<MyChild>) : Recycl
 
     override fun onBindViewHolder(holder: ChildrenViewHolder, position: Int) {
         val myChild = children[position]
+//        if (!isInit)
+//        {
+//            tracker?.select(0)
+//            isInit = true
+//        }
+
         tracker?.let {
-            holder.bind(myChild, it.isSelected(position.toLong()))
-        }
+            holder.bind(myChild, it.isSelected(position.toLong()))}
     }
 
     override fun getItemCount(): Int {

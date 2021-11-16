@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.selection.*
-import androidx.recyclerview.selection.SelectionTracker.SelectionPredicate
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
@@ -21,15 +22,8 @@ val children = listOf<MyChild>(
     MyChild("Мила", LocalDate.of(2017, 2, 10), Sex.GIRL)
 )
 
-val anthropometries = listOf<Anthropometry>(
-    Anthropometry(LocalDate.of(2016, 9, 17), 53.0, 5.5 ),
-    Anthropometry(LocalDate.of(2016, 10, 17), 55.0, 6.0 ),
-    Anthropometry(LocalDate.of(2016, 11, 17), 58.0, 7.5 )
-)
+var curChild = children[0]
 
-/**
- * TODO
- */
 class HomeFragment : Fragment() {
 
     var tracker: SelectionTracker<Long>? = null
@@ -55,11 +49,31 @@ class HomeFragment : Fragment() {
             SelectionPredicates.createSelectSingleAnything()
         ).build()
 
-        (childrenRecyclerView.adapter as ChildrenRecyclerViewAdapter).setTracker(tracker)
+        tracker?.addObserver(
+            object : SelectionTracker.SelectionObserver<Long>() {
+                override fun onSelectionChanged() {
+                    super.onSelectionChanged()
+                    if(tracker?.selection!!.size() > 0)
+                    {
+                        val id = tracker?.selection!!.elementAt(0)
+                        curChild = children[id.toInt()]
 
-        val anthropometryRecyclerView : RecyclerView = view.findViewById(R.id.anthropometries_recyclerView)
-        anthropometryRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
-        anthropometryRecyclerView.adapter = AnthropometryRecyclerViewAdapter(anthropometries)
+                        setFragmentResult(CUR_CHILD, bundleOf(Pair(CUR_CHILD, curChild)))
+
+                        // TODO: refactor
+                        val anthropometryRecyclerView : RecyclerView = view.findViewById(R.id.anthropometries_recyclerView)
+                        anthropometryRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+                        anthropometryRecyclerView.adapter = AnthropometryRecyclerViewAdapter(
+                            curChild.anthropometries
+                        )
+                    }
+                }
+            }
+        )
+
+        tracker?.select(0)
+
+        (childrenRecyclerView.adapter as ChildrenRecyclerViewAdapter).setTracker(tracker)
 
         // Inflate the layout for this fragment
         return view

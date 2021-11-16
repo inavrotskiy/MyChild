@@ -11,6 +11,7 @@ import java.time.LocalDate
 import java.util.*
 
 private const val LAST_SELECTED_ITEM = "last_selected_item"
+internal const val CUR_CHILD = "CUR_CHILD"
 
 lateinit var bottomMenu : BottomNavigationView
 
