@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">MyChild</string>
+    <string name="main">Главная</string>
+    <string name="graph">График</string>
+    <string name="about">О нас</string>
+    <string name="about_program">Приложение MyChild для работы с ростом и весом ребенка.
+        Позволяет вести дневник роста и веса за неограниченное время по любому числу детей.
+        Умеет строить удобные графики для сравнения веса и роста Вашего ребенка со стандартами, принятыми ВОЗ.
+    </string>
+    <string name="developer">Разработчик: Навроцкий Илья, 2021г.</string>
+    <string name="date">Дата:</string>
 </resources>

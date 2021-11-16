@@ -18,9 +18,7 @@ internal class Graph(
 ) {
 
     private lateinit var sortedPoints: List<PointF>
-    private var minX = 0f
     private var maxX = 0f
-    private var minY = 0f
     private var maxY = 0f
     private val linePaint = Paint()
     private val nodePaint = Paint()
