@@ -25,12 +25,6 @@ class ChildrenRecyclerViewAdapter(private val children : List<MyChild>) : Recycl
 
     override fun onBindViewHolder(holder: ChildrenViewHolder, position: Int) {
         val myChild = children[position]
-//        if (!isInit)
-//        {
-//            tracker?.select(0)
-//            isInit = true
-//        }
-
         tracker?.let {
             holder.bind(myChild, it.isSelected(position.toLong()))}
     }

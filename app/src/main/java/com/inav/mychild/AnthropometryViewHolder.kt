@@ -15,7 +15,7 @@ class AnthropometryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         val decimalFormat = DecimalFormat("###.##")
 
         dateTextView.text = "Дата: ${anthropometry.date}"
-        heightTextView.text = "Рост: ${decimalFormat.format(anthropometry.height)} кг."
-        weightTextView.text = "Вес: ${decimalFormat.format(anthropometry.weight)} см."
+        heightTextView.text = "Рост: ${decimalFormat.format(anthropometry.height)} см."
+        weightTextView.text = "Вес: ${decimalFormat.format(anthropometry.weight)} кг."
     }
 }

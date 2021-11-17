@@ -47,9 +47,20 @@ class MyChild(val name : String, private val birthday: LocalDate, val sex: Sex) 
 
         // Let's make it at least a little bit like the truth
         val curDate = LocalDate.now()
-        var maxCount = Period.between(birthday, curDate).years * 12
-        if (maxCount == 0)
-            maxCount = Period.between(birthday, curDate).months + 1
+        var years = Period.between(birthday, curDate).years
+        if (years == 0)
+            years++
+        val maxCount = years * 6
+        var maxWeight =  when(years){
+            in 10..15 -> 70.0
+            in 16..25 -> 100.0
+            else -> years * 6.0
+        }
+        var maxHeight =  when(years){
+            in 10..15 -> 150.0
+            in 16..25 -> 200.0
+            else -> 50.0 + years * 10
+        }
 
         var count = Random.nextInt(1, maxCount)
 
@@ -59,8 +70,8 @@ class MyChild(val name : String, private val birthday: LocalDate, val sex: Sex) 
 
         while(count > 0){
             dates.add(Random.nextLong(birthday.toEpochDay(), curDate.toEpochDay()))
-            heights.add(Random.nextDouble(50.0, 200.0))
-            weights.add(Random.nextDouble(3.0, 100.0))
+            heights.add(Random.nextDouble(50.0, maxHeight))
+            weights.add(Random.nextDouble(3.0, maxWeight))
             count--
         }
         val sortedDates = dates.sorted()

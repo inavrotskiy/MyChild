@@ -3,7 +3,6 @@ package com.inav.mychild
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
@@ -22,7 +21,8 @@ val children = listOf<MyChild>(
     MyChild("Мила", LocalDate.of(2017, 2, 10), Sex.GIRL)
 )
 
-var curChild = children[0]
+lateinit var fragmentView: View
+var curChildId = 0
 
 class HomeFragment : Fragment() {
 
@@ -33,71 +33,58 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        fragmentView = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val childrenRecyclerView = view.findViewById<RecyclerView>(R.id.children_recyclerView)
-        childrenRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
+        val childrenRecyclerView = fragmentView.findViewById<RecyclerView>(R.id.children_recyclerView)
+        childrenRecyclerView.layoutManager = LinearLayoutManager(fragmentView.context, LinearLayoutManager.HORIZONTAL, false)
         childrenRecyclerView.adapter = ChildrenRecyclerViewAdapter(children)
 
-        tracker = SelectionTracker.Builder<Long>(
-            "childrenRecyclerSelection",
-            childrenRecyclerView,
-            ItemIdKeyProvider(childrenRecyclerView),
-            ItemLookup(childrenRecyclerView),
-            StorageStrategy.createLongStorage()
-        ).withSelectionPredicate(
-            SelectionPredicates.createSelectSingleAnything()
-        ).build()
+        initSelectionTracker(childrenRecyclerView)
 
+        // Inflate the layout for this fragment
+        return fragmentView
+    }
+
+    private fun initSelectionTracker(childrenRecyclerView: RecyclerView) {
+        tracker =
+            ChildrenRecyclerTrackerFactory.create("childrenRecyclerSelection", childrenRecyclerView)
         tracker?.addObserver(
             object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
                     super.onSelectionChanged()
-                    if(tracker?.selection!!.size() > 0)
-                    {
-                        val id = tracker?.selection!!.elementAt(0)
-                        curChild = children[id.toInt()]
 
-                        setFragmentResult(CUR_CHILD, bundleOf(Pair(CUR_CHILD, curChild)))
+                    curChildId = getSelectedChildId(tracker!!)
+                    val curChild = children[curChildId]
+                    createAnthropometriesRecyclerView(curChild.anthropometries, fragmentView)
 
-                        // TODO: refactor
-                        val anthropometryRecyclerView : RecyclerView = view.findViewById(R.id.anthropometries_recyclerView)
-                        anthropometryRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
-                        anthropometryRecyclerView.adapter = AnthropometryRecyclerViewAdapter(
-                            curChild.anthropometries
-                        )
-                    }
+                    // Store current Child for graphs fragment
+                    setFragmentResult(CUR_CHILD, bundleOf(Pair(CUR_CHILD, curChild)))
                 }
             }
         )
 
-        tracker?.select(0)
-
+        tracker?.select(curChildId.toLong())
         (childrenRecyclerView.adapter as ChildrenRecyclerViewAdapter).setTracker(tracker)
 
-        // Inflate the layout for this fragment
-        return view
+        (childrenRecyclerView.layoutManager as LinearLayoutManager).scrollToPosition(curChildId)
     }
 
-    inner class ItemLookup(private val recyclerView: RecyclerView) : ItemDetailsLookup<Long>() {
-        override fun getItemDetails(event: MotionEvent) : ItemDetails<Long>? {
-            val view = recyclerView.findChildViewUnder(event.x, event.y) ?: return null
-            val viewHolder = recyclerView.getChildViewHolder(view) as ChildrenViewHolder
-            return viewHolder?.getItemDetails()
-        }
+    /*
+    * Returns id of the selected in tracker Child.
+    * */
+    private fun getSelectedChildId(tracker: SelectionTracker<Long>): Int {
+        if (tracker?.selection!!.size() == 0)
+            return 0
+
+        return tracker?.selection!!.elementAt(0).toInt()
     }
 
-    inner class ItemIdKeyProvider(private val recyclerView: RecyclerView)
-        : ItemKeyProvider<Long>(SCOPE_MAPPED) {
-
-        override fun getKey(position: Int): Long? {
-            return recyclerView.adapter?.getItemId(position)
-                ?: throw IllegalStateException("RecyclerView adapter is not set!")
-        }
-
-        override fun getPosition(key: Long): Int {
-            val viewHolder = recyclerView.findViewHolderForItemId(key)
-            return viewHolder?.layoutPosition ?: RecyclerView.NO_POSITION
-        }
+    /*
+    * Creates recycler view with specified anthropometries.
+    * */
+    private fun createAnthropometriesRecyclerView(anthropometries : List<Anthropometry>, fragmentView: View){
+        val anthropometryRecyclerView: RecyclerView = fragmentView.findViewById(R.id.anthropometries_recyclerView)
+        anthropometryRecyclerView.layoutManager = LinearLayoutManager(fragmentView.context, LinearLayoutManager.VERTICAL, false)
+        anthropometryRecyclerView.adapter = AnthropometryRecyclerViewAdapter(anthropometries)
     }
 }
