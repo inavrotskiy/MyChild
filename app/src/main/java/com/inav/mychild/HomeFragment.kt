@@ -12,16 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
 
-lateinit var fragmentView: View
-
 class HomeFragment : Fragment() {
-
+    lateinit var fragmentView: View
     var tracker: SelectionTracker<Long>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         fragmentView = inflater.inflate(R.layout.fragment_home, container, false)
 
@@ -53,21 +51,20 @@ class HomeFragment : Fragment() {
             }
         )
 
+        (childrenRecyclerView.layoutManager as LinearLayoutManager).scrollToPosition(curChildId)
         tracker?.select(curChildId.toLong())
         (childrenRecyclerView.adapter as ChildrenRecyclerViewAdapter).setTracker(tracker)
-
-        (childrenRecyclerView.layoutManager as LinearLayoutManager).scrollToPosition(curChildId)
     }
 
     /*
     * Returns id of the selected in tracker Child.
     * */
     private fun getSelectedChildId(tracker: SelectionTracker<Long>): Int {
-        if (tracker?.selection!!.size() != 1){
+        if (tracker.selection.size() != 1){
             tracker.select(curChildId.toLong())
         }
 
-        return tracker?.selection!!.elementAt(0).toInt()
+        return tracker.selection.elementAt(0).toInt()
     }
 
     /*

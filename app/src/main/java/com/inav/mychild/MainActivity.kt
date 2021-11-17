@@ -3,13 +3,10 @@ package com.inav.mychild
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.text.DateFormat
 import java.time.LocalDate
-import java.util.*
 
 private const val LAST_SELECTED_ITEM = "last_selected_item"
 internal const val CUR_CHILD = "CUR_CHILD"
@@ -25,12 +22,13 @@ val children = listOf<MyChild>(
 
 lateinit var bottomMenu : BottomNavigationView
 var curChildId = 0
-
+private lateinit var toastNotAvailable : Toast
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        toastNotAvailable = Toast.makeText(this, "Activity is not available.", Toast.LENGTH_LONG)
 
         bottomMenu = findViewById(R.id.bottom_navigation)
 
@@ -75,5 +73,12 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(Intent.EXTRA_TEXT, textToShare)
 
         startActivity(intent)
+    }
+
+    override fun startActivity(intent: Intent?) {
+        if(intent?.resolveActivity(packageManager) != null)
+            super.startActivity(intent)
+        else
+            toastNotAvailable.show()
     }
 }
