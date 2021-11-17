@@ -13,11 +13,10 @@ internal class GraphView(context: Context, private val graphs: List<Graph>, priv
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        var legendY = legendPosition.y
+        var y = legendPosition.y
         for (graph in graphs) {
             graph.draw(canvas)
-            graph.drawLegend(canvas, PointF(legendPosition.x, legendY))
-            legendY += GRAPH_LEGEND_SIZE
+            graph.drawLegend(canvas, legendPosition.x, y.also { y+= GRAPH_LEGEND_SIZE})
         }
     }
 }

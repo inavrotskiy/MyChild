@@ -78,9 +78,9 @@ internal class Graph(
     /*
     * Draws legend text of the graph at a specified position.
     * */
-    fun drawLegend(canvas: Canvas?, position: PointF) {
+    fun drawLegend(canvas: Canvas?, x: Float, y: Float) {
         if (canvas == null)
             return
-        canvas.drawText(legend, position.x, position.y, linePaint)
+        canvas.drawText(legend, x, y, linePaint)
     }
 }
