@@ -2,9 +2,9 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
+    app:cardCornerRadius="25dp"
     android:layout_width="200dp"
     android:layout_height="50dp"
-    app:cardCornerRadius="30dp"
     app:cardElevation="4dp">
 
     <LinearLayout
@@ -27,11 +27,7 @@
 
             <TextView
                 android:id="@+id/name_myChild_card_TextView"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-
+                style="@style/Theme.MyChild.ChildCardTitle"
                 android:text="name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -39,8 +35,7 @@
 
             <TextView
                 android:id="@+id/age_myChild_card_TextView"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                style="@style/Theme.MyChild.ChildCardText"
                 android:text="age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
