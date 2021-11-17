@@ -7,8 +7,6 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 
 class ChildrenRecyclerViewAdapter(private val children : List<MyChild>) : RecyclerView.Adapter<ChildrenViewHolder>() {
-
-    var isInit = false
     private var tracker: SelectionTracker<Long>? = null
     init {
         setHasStableIds(true)
