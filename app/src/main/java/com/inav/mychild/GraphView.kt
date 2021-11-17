@@ -8,14 +8,16 @@ import android.view.View
 /*
 * The class to draw graphs.
 */
-internal class GraphView(context: Context, private val graphs: List<Graph>, private var legendPosition : PointF) : View(context) {
+internal class GraphView(context: Context, private val graphs: List<Graph>, private val legendPosition : PointF) : View(context) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
+        var legendY = legendPosition.y
         for (graph in graphs) {
             graph.draw(canvas)
-            graph.drawLegend(canvas, legendPosition.also { legendPosition.y += GRAPH_LEGEND_SIZE })
+            graph.drawLegend(canvas, PointF(legendPosition.x, legendY))
+            legendY += GRAPH_LEGEND_SIZE
         }
     }
 }
