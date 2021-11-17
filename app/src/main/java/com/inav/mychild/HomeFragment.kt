@@ -12,17 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
 
-val children = listOf<MyChild>(
-    MyChild("Лиза", LocalDate.of(2016, 9, 17), Sex.GIRL),
-    MyChild("Степан", LocalDate.of(2013, 6, 23), Sex.BOY),
-    MyChild("Егор", LocalDate.of(2011, 8, 20), Sex.BOY),
-    MyChild("Вова", LocalDate.of(2002, 4, 22), Sex.BOY),
-    MyChild("Женя", LocalDate.of(1998, 10, 16), Sex.BOY),
-    MyChild("Мила", LocalDate.of(2017, 2, 10), Sex.GIRL)
-)
-
 lateinit var fragmentView: View
-var curChildId = 0
 
 class HomeFragment : Fragment() {
 
@@ -73,8 +63,9 @@ class HomeFragment : Fragment() {
     * Returns id of the selected in tracker Child.
     * */
     private fun getSelectedChildId(tracker: SelectionTracker<Long>): Int {
-        if (tracker?.selection!!.size() == 0)
-            return 0
+        if (tracker?.selection!!.size() != 1){
+            tracker.select(curChildId.toLong())
+        }
 
         return tracker?.selection!!.elementAt(0).toInt()
     }
