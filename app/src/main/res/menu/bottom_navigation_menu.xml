@@ -7,7 +7,7 @@
         android:title="@string/main" />
 
     <item
-        android:id="@+id/help"
+        android:id="@+id/graph"
         android:icon="@drawable/ic_baseline_show_chart_24"
         android:title="@string/graph" />
 

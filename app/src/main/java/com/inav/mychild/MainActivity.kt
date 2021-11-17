@@ -11,7 +11,11 @@ import java.time.LocalDate
 private const val LAST_SELECTED_ITEM = "last_selected_item"
 internal const val CUR_CHILD = "CUR_CHILD"
 
-val children = listOf<MyChild>(
+private val HOME_FRAGMENT = HomeFragment().javaClass.name
+private val GRAPH_FRAGMENT = GraphFragment().javaClass.name
+private val ABOUT_FRAGMENT = AboutFragment().javaClass.name
+
+val children = listOf(
     MyChild("Лиза", LocalDate.of(2016, 9, 17), Sex.GIRL),
     MyChild("Степан", LocalDate.of(2013, 6, 23), Sex.BOY),
     MyChild("Егор", LocalDate.of(2011, 8, 20), Sex.BOY),
@@ -20,11 +24,14 @@ val children = listOf<MyChild>(
     MyChild("Мила", LocalDate.of(2017, 2, 10), Sex.GIRL)
 )
 
-lateinit var bottomMenu : BottomNavigationView
 var curChildId = 0
-private lateinit var toastNotAvailable : Toast
-
 class MainActivity : AppCompatActivity() {
+    lateinit var bottomMenu : BottomNavigationView
+    private lateinit var toastNotAvailable : Toast
+    private var homeFragment = HomeFragment()
+    private var graphFragment = GraphFragment()
+    private var aboutFragment = AboutFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,11 +41,32 @@ class MainActivity : AppCompatActivity() {
 
         bottomMenu.setOnItemSelectedListener { item ->
             when(item.itemId){
-                R.id.home -> replaceFragment(HomeFragment())
-                R.id.help -> replaceFragment(GraphFragment())
-                R.id.about -> replaceFragment(AboutFragment())
-                R.id.share -> share(children[curChildId])
+                R.id.home ->{
+                    val fragment =
+                        savedInstanceState?.let {
+                            supportFragmentManager.getFragment(it, HOME_FRAGMENT)
+                        } ?: homeFragment
+                    replaceFragment(fragment)
+                }
+                R.id.graph ->{
+                    val fragment =
+                        savedInstanceState?.let {
+                            supportFragmentManager.getFragment(it, GRAPH_FRAGMENT)
+                        } ?: graphFragment
+                    replaceFragment(fragment)
+                }
+                R.id.about -> {
+                    val fragment =
+                        savedInstanceState?.let {
+                            supportFragmentManager.getFragment(it, ABOUT_FRAGMENT)
+                        } ?: aboutFragment
+                    replaceFragment(fragment)
+                }
+                R.id.share ->{
+                    share(children[curChildId])
+                }
             }
+
             true
         }
 
@@ -57,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 
