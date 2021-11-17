@@ -24,7 +24,6 @@ class MyChild(val name : String, private val birthday: LocalDate, val sex: Sex) 
         }
     }
 
-    // TODO: internationalization
     fun ageToString() : String{
         return "$age ${getAgeSuffix(age)}"
     }
@@ -51,12 +50,12 @@ class MyChild(val name : String, private val birthday: LocalDate, val sex: Sex) 
         if (years == 0)
             years++
         val maxCount = years * 6
-        var maxWeight =  when(years){
+        val maxWeight =  when(years){
             in 10..15 -> 70.0
             in 16..25 -> 100.0
             else -> years * 6.0
         }
-        var maxHeight =  when(years){
+        val maxHeight =  when(years){
             in 10..15 -> 150.0
             in 16..25 -> 200.0
             else -> 50.0 + years * 10
