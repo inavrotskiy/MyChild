@@ -1,13 +1,14 @@
 package com.inav.mychild
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 
 class ChildrenRecyclerViewAdapter(private val children : List<MyChild>) : RecyclerView.Adapter<ChildrenViewHolder>() {
     private var tracker: SelectionTracker<Long>? = null
+    private var lastSelected : View? = null
     init {
         setHasStableIds(true)
     }
@@ -22,9 +23,21 @@ class ChildrenRecyclerViewAdapter(private val children : List<MyChild>) : Recycl
     }
 
     override fun onBindViewHolder(holder: ChildrenViewHolder, position: Int) {
-        val myChild = children[position]
+
+        // Unselect last selected item forcibly when new item is selected.
+        if (tracker?.isSelected(position.toLong()) == true) {
+            if (lastSelected != holder.itemView) {
+                lastSelected?.isActivated = false
+                lastSelected = holder.itemView
+            }
+        }
+
         tracker?.let {
-            holder.bind(myChild, it.isSelected(position.toLong()))}
+            holder.bind(children[position], it.isSelected(position.toLong()))}
+    }
+
+    private fun deselectPrevItem(tracker: SelectionTracker<Long>?){
+
     }
 
     override fun getItemCount(): Int {
