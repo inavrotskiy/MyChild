@@ -57,6 +57,6 @@ class GraphFragment : Fragment() {
         val heightGraph = Graph(child.heightsAsPoints, "--рост", Color.GREEN, lineWidth, Color.LTGRAY, nodeRadius)
         val weightGraph = Graph(child.weightsAsPoints, "--вес", Color.BLUE, lineWidth, Color.LTGRAY, nodeRadius)
 
-        return GraphView(graphFrame.context, listOf(heightGraph, weightGraph), PointF(50f,50f))
+        return GraphView(graphFrame.context, listOf(heightGraph, weightGraph), PointF(50f,50f), child.name)
     }
 }
