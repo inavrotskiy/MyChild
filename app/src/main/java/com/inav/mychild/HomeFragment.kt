@@ -10,7 +10,6 @@ import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.selection.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.time.LocalDate
 
 class HomeFragment : Fragment() {
     lateinit var fragmentView: View
@@ -40,11 +39,14 @@ class HomeFragment : Fragment() {
             object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
                     super.onSelectionChanged()
+                    val selectedId = getSelectedChildId(tracker!!)
+                    if (curChildId != selectedId) {
+                        (childrenRecyclerView.adapter as ChildrenRecyclerViewAdapter).unselectLastSelectedView()
+                        curChildId = selectedId
+                    }
 
-                    curChildId = getSelectedChildId(tracker!!)
                     val curChild = children[curChildId]
                     createAnthropometriesRecyclerView(curChild.anthropometries, fragmentView)
-
                     // Store current Child for graphs fragment
                     setFragmentResult(CUR_CHILD, bundleOf(Pair(CUR_CHILD, curChild)))
                 }

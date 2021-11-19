@@ -27,7 +27,7 @@ private class ItemLookup(private val recyclerView: RecyclerView) : ItemDetailsLo
     override fun getItemDetails(event: MotionEvent) : ItemDetails<Long>? {
         val view = recyclerView.findChildViewUnder(event.x, event.y) ?: return null
         val viewHolder = recyclerView.getChildViewHolder(view) as ChildrenViewHolder
-        return viewHolder?.getItemDetails()
+        return viewHolder.getItemDetails()
     }
 }
 
@@ -36,8 +36,7 @@ private class ItemLookup(private val recyclerView: RecyclerView) : ItemDetailsLo
 * */
 private class ItemIdKeyProvider(private val recyclerView: RecyclerView)
     : ItemKeyProvider<Long>(SCOPE_MAPPED) {
-
-    override fun getKey(position: Int): Long? {
+    override fun getKey(position: Int): Long {
         return recyclerView.adapter?.getItemId(position)
             ?: throw IllegalStateException("RecyclerView adapter is not set!")
     }
