@@ -39,22 +39,31 @@ class HomeFragment : Fragment() {
             object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
                     super.onSelectionChanged()
-                    val selectedId = getSelectedChildId(tracker!!)
+
+                    var selectedId = getSelectedChildId(tracker!!)
+
+                    if (selectedId == -1){
+                        if (curChildId != -1)
+                            selectedId = curChildId
+                        else if (children.isNotEmpty())
+                            selectedId = 0
+                    }
+
                     if (curChildId != selectedId) {
                         (childrenRecyclerView.adapter as ChildrenRecyclerViewAdapter).unselectLastSelectedView()
                         curChildId = selectedId
-                    }
 
-                    val curChild = children[curChildId]
-                    createAnthropometriesRecyclerView(curChild.anthropometries, fragmentView)
-                    // Store current Child for graphs fragment
-                    setFragmentResult(CUR_CHILD, bundleOf(Pair(CUR_CHILD, curChild)))
+                        val curChild = children[curChildId]
+                        createAnthropometriesRecyclerView(curChild.anthropometries, fragmentView)
+
+                        // Store current Child for graphs fragment
+                        setFragmentResult(CUR_CHILD, bundleOf(Pair(CUR_CHILD, curChild)))
+                    }
                 }
             }
         )
 
-        (childrenRecyclerView.layoutManager as LinearLayoutManager).scrollToPosition(curChildId)
-        tracker?.select(curChildId.toLong())
+        tracker?.select(0)
         (childrenRecyclerView.adapter as ChildrenRecyclerViewAdapter).setTracker(tracker)
     }
 
@@ -62,11 +71,10 @@ class HomeFragment : Fragment() {
     * Returns id of the selected in tracker Child.
     * */
     private fun getSelectedChildId(tracker: SelectionTracker<Long>): Int {
-        if (tracker.selection.size() != 1){
-            tracker.select(curChildId.toLong())
-        }
+        if (tracker.selection.size() > 0)
+            return tracker.selection.elementAt(0).toInt()
 
-        return tracker.selection.elementAt(0).toInt()
+        return -1
     }
 
     /*

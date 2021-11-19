@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.selection.SelectionTracker
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.LocalDate
 
@@ -24,7 +25,7 @@ val children = listOf(
     MyChild("Мила", LocalDate.of(2017, 2, 10), Sex.GIRL)
 )
 
-var curChildId = 0
+var curChildId = -1
 class MainActivity : AppCompatActivity() {
     lateinit var bottomMenu : BottomNavigationView
     private lateinit var toastNotAvailable : Toast
